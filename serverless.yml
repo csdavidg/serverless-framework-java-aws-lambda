@@ -24,8 +24,8 @@ provider:
   name: aws
   runtime: java8
   lambdaHashingVersion: 20201221
-  region: us-east-1
-  profile: cristian.sanchez
+  region: ${env:AWS_REGION}
+  profile: ${env:AWS_PROFILE}
 
 # you can overwrite defaults here
 #  stage: dev
@@ -62,6 +62,13 @@ functions:
       - http:
           path: /java/lambda
           method: get
+      - s3: 
+          bucket: ${env:AWS_BUCKET}
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: uploads/
+            - suffix: .jpg
+          existing: true
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
